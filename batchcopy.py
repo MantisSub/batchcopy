@@ -7,7 +7,7 @@ Copy files from multiple Insta360 Pro 2 memory cards to a common destination dir
 __author__ = "Axel Busch"
 __copyright__ = "Copyright 2022, Xlvisuals Limited"
 __license__ = "GPL-2.1"
-__version__ = "0.0.2"
+__version__ = "0.0.5"
 __email__ = "info@xlvisuals.com"
 
 import os
@@ -295,7 +295,7 @@ class BatchCopy():
         title = 'About Batch Copy'
         message = (
             'Batch Copy for Insta360 Pro 2 by Axel Busch\n'
-            'Version 0.0.2\n'
+            'Version 0.0.5\n'
             '\n'
             'Provided by Mantis Sub underwater housing for Pro 2\n'
             'Visit https://www.mantis-sub.com/'
