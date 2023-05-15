@@ -27,13 +27,13 @@ The releases section contains binary distributions for Windows and macOS that we
 
 ### From source
 
-Install your favourite version of Python 3 (3.8 or higher). 
+Install your favourite version of Python 3 (3.8 or higher). See https://www.python.org/downloads/ 
 
-If you're on macOS and install Python via homebrew, you might have to install python-tk along with your Python 3 installation.
+If you're on macOS and install Python via homebrew, you might have to separately install python-tk:
 
 ```
-brew install python@3.10
-brew install python-tk@3.10
+brew install python@3.11
+brew install python-tk@3.11
 ```
 
 Download or clone the repository, then start batchcopy.py from the command line.
