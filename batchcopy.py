@@ -5,9 +5,9 @@ Copy files from multiple Insta360 Pro 2 memory cards to a common destination dir
 """
 
 __author__ = "Axel Busch"
-__copyright__ = "Copyright 2022, Xlvisuals Limited"
+__copyright__ = "Copyright 2023, Xlvisuals Limited"
 __license__ = "GPL-2.1"
-__version__ = "0.0.5"
+__version__ = "0.0.6"
 __email__ = "info@xlvisuals.com"
 
 import os
@@ -242,7 +242,7 @@ class BatchCopy():
                     if not recordings:
                         messagebox.showwarning(title="Warning", message="The selected directory has no VID_ or PIC_ subdirectories.")
 
-    def _on_delete_source_dir(self):
+    def _on_remove_source_dir(self):
         try:
             [index] = self.source_listbox.curselection()
         except ValueError:
@@ -267,7 +267,6 @@ class BatchCopy():
             self.target_dir_value.set(tdir)
             if not os.path.isdir(tdir):
                 messagebox.showwarning(title="Warning", message="No valid target directory selected.")
-
 
     def _on_find_cards(self):
         file = ".pro_suc"
@@ -295,7 +294,7 @@ class BatchCopy():
         title = 'About Batch Copy'
         message = (
             'Batch Copy for Insta360 Pro 2 by Axel Busch\n'
-            'Version 0.0.5\n'
+            'Version ' + __version__ + '\n'
             '\n'
             'Provided by Mantis Sub underwater housing for Pro 2\n'
             'Visit https://www.mantis-sub.com/'
@@ -327,6 +326,33 @@ class BatchCopy():
         self.text_area.configure(state=tk.NORMAL)
         self.text_area.delete('1.0', tk.END)
         self.text_area.configure(state=tk.DISABLED)
+
+    def _on_erase_source_dir(self):
+        self._clear_log()
+        sources_dirs = self._get_list_entries()
+        system_root_dir = Helpers.system_root_path()
+        if sources_dirs:
+            self.log(f"Erasing all files except Insta360\nspeed test success indicator:")
+            self.log("")
+            answer = messagebox.askyesno("Confirm", f"Are you sure you want to erase all {len(sources_dirs)} cards? This action can't be undone.")
+            if answer:
+                for source in sources_dirs:
+                    try:
+                        if not source:
+                            self.log(f"Error: empty source.")
+                        elif source == system_root_dir:
+                            self.log(f"Error erasing '{source}': path is system root.")
+                        else:
+                            Helpers.erase_all(source, ".pro_suc")
+                            self.log(f"Erased all files in '{source}'.")
+                            os.mkdir(os.path.join(source, "DCIM"))
+                            os.mkdir(os.path.join(source, "EVENT"))
+
+                    except Exception as e:
+                        return
+            self.log("Done.")
+        else:
+            messagebox.showerror(title="Error", message="No cards added.")
 
     def _on_start(self):
         try:
@@ -473,15 +499,11 @@ class BatchCopy():
 
         row += 1
         label2 = ttk.Label(self.root, text='Only PIC_xxx and VID_xxx folders are copied. Existing folders with the same name are merged. ')
-        label2.grid(row=row, column=0, columnspan=5, padx=50, pady=(5,2), sticky="w")
-
-        row += 1
-        label1 = ttk.Label(self.root, text='Provided by Mantis Sub underwater housing for Insta360 Pro/Pro 2. See File -> About for details.')
-        label1.grid(row=row, column=0, columnspan=5, padx=50, pady=(2,20), sticky="w")
+        label2.grid(row=row, column=0, columnspan=5, padx=50, pady=(5,20), sticky="w")
 
         row += 1
         ttk.Label(self.root, text="Sources", anchor='e').grid(row=row, column=0, padx=(50,5), pady=2, sticky="en")
-        self.source_listbox = tk.Listbox(self.root, selectmode=tk.SINGLE, height=7)
+        self.source_listbox = tk.Listbox(self.root, selectmode=tk.SINGLE, height=8)
         self.source_listbox.grid(row=row, column=1, columnspan=3, rowspan=4, padx=2, pady=2, sticky="ewns")
         self.source_button = ttk.Button(self.root, text='Find cards', command=self._on_find_cards, width=self.button_width)
         self.source_button.grid(row=row, column=4, padx=(5,50), pady=5, sticky="wn")
@@ -489,8 +511,11 @@ class BatchCopy():
         self.source_button = ttk.Button(self.root, text='Choose card', command=self._on_select_source_dir, width=self.button_width)
         self.source_button.grid(row=row, column=4, padx=(5,50), pady=5, sticky="wn")
         row += 1
-        self.source_button = ttk.Button(self.root, text='Remove selected', command=self._on_delete_source_dir, width=self.button_width)
+        self.source_button = ttk.Button(self.root, text='Remove selected', command=self._on_remove_source_dir, width=self.button_width)
         self.source_button.grid(row=row, column=4, padx=(5,50), pady=5, sticky="wn")
+        row += 1
+        self.erase_button = ttk.Button(self.root, text='Erase cards', command=self._on_erase_source_dir, width=self.button_width)
+        self.erase_button.grid(row=row, column=4, padx=(5,50), pady=5, sticky="wn")
         row += 1
         ttk.Label(self.root, text="").grid(row=row, column=0, padx=2, pady=5, sticky="wns")
 
@@ -515,6 +540,10 @@ class BatchCopy():
 
         self.button_start.config(state=tk.NORMAL)
         # self.button_cancel.config(state=tk.DISABLED)
+
+        row += 1
+        label1 = ttk.Label(self.root, text='Provided by Mantis Sub underwater housing for Insta360 Pro/Pro 2. See File -> About for details.')
+        label1.grid(row=row, column=0, columnspan=5, padx=50, pady=(2,20), sticky="w")
 
         # update theme
         self.set_theme(0)

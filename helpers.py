@@ -4,7 +4,7 @@
 __author__ = "Axel Busch"
 __copyright__ = "Copyright 2022, Xlvisuals Limited"
 __license__ = "GPL-2.1"
-__version__ = "0.0.5"
+__version__ = "0.0.6"
 __email__ = "info@xlvisuals.com"
 
 import sys
@@ -140,6 +140,25 @@ class Helpers:
         except:
             value = default
         return value
+
+    @staticmethod
+    def system_root_path():
+        """
+        On Linux and macOS this returns /
+        On Windows this the current drive, e.g. C:\\
+        """
+        return os.path.abspath(os.sep)
+
+    @staticmethod
+    def erase_all(root_dir, keep=None):
+        if root_dir:
+            for root, dirs, files in os.walk(root_dir):
+                for name in files:
+                    if not keep or (keep not in root and keep not in name):
+                        os.remove(os.path.join(root, name))
+                for name in dirs:
+                    if not keep or (keep not in root and keep not in name):
+                        shutil.rmtree(os.path.join(root, name))
 
     @staticmethod
     def read_file(filename, encoding='utf-8', binary=False, default=''):
