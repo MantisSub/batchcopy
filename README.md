@@ -3,7 +3,7 @@
 
 ## Introduction
 
-This is a Python3 program to copy files from multiple Insta360 Pro 2 memory cards to a common destination directory.
+Batch Copy can copy files from multiple Insta360 Pro 2 memory cards to a common destination directory. It is written in Python.
 
 ## Installation
 
@@ -19,10 +19,11 @@ The releases section contains binary distributions for Windows and macOS that we
 
 #### macOS
 
-- Both Intel and Apple CPUs are supported (Apple via Rosetta 2).
+- Both Intel and Apple CPUs are supported (Apple via Rosetta 2) for macOS Big Sur (11.0) and higher.
 - Open the .dmg file and drag batchcopy.app and ffprobe to your /Applications folder.
 - When starting the app you may be presented with a Security Warning. 
   - Click OK, then go to System Preferences -> Security & Privacy -> click “Open Anyway”.
+- If you double-click on the app and nothing happens you likely have macOS 10.15 or lower, which is not supported.
 
 
 ### From source
@@ -68,3 +69,4 @@ The program spawns one copy process per card to copy in parallel. Closing the pr
 
 - The progress window should provide enough information if something goes wrong.
 - Slow copy: disable virus checker for the source and destination folders during copy.
+- If you double-click on the app and nothing happens you likely have macOS 10.15 or lower, which is not supported.
